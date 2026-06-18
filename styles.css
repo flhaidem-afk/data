@@ -626,30 +626,97 @@ tbody tr:hover {
     }
 }
 
+/* Mobile Fixes */
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
+
+    .dashboard-container {
+        display: block;
     }
+
+    .sidebar {
+        display: none;
+    }
+
     .main-content {
+        width: 100%;
         margin-left: 0;
         max-width: 100%;
-        padding: 20px;
+        padding: 15px;
     }
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+
     .top-header {
         flex-direction: column;
-        gap: 16px;
         align-items: flex-start;
     }
+
     .header-right {
         width: 100%;
+        display: flex;
         flex-wrap: wrap;
     }
+
     .search-box {
         width: 100%;
     }
+
+    .notification-btn {
+        flex: 1;
+    }
+
+    .export-btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .chart-container {
+        height: 220px;
+    }
+
+    canvas {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 650px;
+    }
+    html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+svg,
+canvas {
+    max-width: 100%;
+}
+}
+
+@media (max-width: 480px) {
+    .chart-controls {
+        flex-wrap: wrap;
+    }
+
+    .control-btn {
+        flex: 1;
+        min-width: 70px;
+    }
+
+    .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.view-all-btn {
+    width: 100%;
+}
 }
 
 /* Animations */
@@ -690,4 +757,175 @@ tbody tr:hover {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+* {
+    max-width: 100%;
+}
+
+.customer-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.customer-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.trx-id {
+    font-weight: 600;
+    color: var(--primary-light);
+}
+
+/* ===================================
+   FINAL RESPONSIVE FIX
+=================================== */
+
+#revenueChart,
+#trafficChart{
+    width:100% !important;
+    height:100% !important;
+    display:block;
+}
+
+@media screen and (max-width:768px){
+
+    .sidebar{
+        display:none;
+    }
+    .stat-card,
+.chart-card,
+.table-card{
+    width:100%;
+}
+.table-container{
+    border-radius:12px;
+}
+
+    .main-content{
+        margin-left:0;
+        max-width:100%;
+        width:100%;
+        padding:15px;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .charts-section{
+        grid-template-columns:1fr;
+    }
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .header-right{
+        width:100%;
+        flex-wrap:wrap;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .notification-btn,
+    .export-btn{
+        flex:1;
+    }
+
+    .chart-header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .chart-controls{
+        width:100%;
+        display:flex;
+    }
+
+    .control-btn{
+        flex:1;
+    }
+
+ .chart-container{
+    height:300px;
+    min-height:300px;
+}
+
+
+    .table-container{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    table{
+        min-width:700px;
+    }
+
+    .stat-value{
+        font-size:24px;
+    }
+
+    .header-left h1{
+        font-size:24px;
+    }
+}
+
+@media screen and (max-width:480px){
+
+    .main-content{
+        padding:12px;
+    }
+
+    .chart-container{
+        height:220px;
+    }
+
+    .stat-card,
+    .chart-card,
+    .table-card{
+        padding:18px;
+    }
+
+    .stat-value{
+        font-size:22px;
+    }
+
+    .header-left h1{
+        font-size:20px;
+    }
+
+    .breadcrumb{
+        font-size:13px;
+    }
+
+    .table-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .view-all-btn{
+        width:100%;
+    }
 }
