@@ -541,9 +541,8 @@ body {
     color: var(--primary);
 }
 
-.table-container {
-    overflow-x: auto;
-}
+
+
 
 table {
     width: 100%;
@@ -686,10 +685,6 @@ tbody tr:hover {
         min-width: 650px;
     }
     html,
-body {
-    width: 100%;
-    overflow-x: hidden;
-}
 
 img,
 svg,
@@ -759,11 +754,6 @@ canvas {
     to { transform: rotate(360deg); }
 }
 
-html,
-body {
-    overflow-x: hidden;
-    width: 100%;
-}
 
 * {
     max-width: 100%;
@@ -873,11 +863,6 @@ body {
 }
 
 
-    .table-container{
-        overflow-x:auto;
-        -webkit-overflow-scrolling:touch;
-    }
-
     table{
         min-width:700px;
     }
@@ -929,3 +914,11 @@ body {
         width:100%;
     }
 }
+
+@media (max-width: 768px) {
+    .filters-sidebar {
+        width: 100%;
+    }
+}
+
+overflow-x
