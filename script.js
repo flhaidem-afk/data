@@ -1,424 +1,840 @@
-// script.js
-class DataPulseDashboard {
-    constructor() {
-        this.charts = {};
-        this.data = this.generateMockData();
-        this.init();
-    }
+/**
+ * DataPulse - Enterprise Analytics Dashboard
+ * Complete JavaScript Application
+ */
 
-    init() {
-        this.initCharts();
-        this.populateTable();
-        this.startRealTimeUpdates();
-        this.setupEventListeners();
-        this.animateNumbers();
-    }
+// ============================================
+// DataPulse Application Core
+// ============================================
+const DataPulse = {
+    // State Management
+    state: {
+        currentPage: 'dashboard',
+        theme: 'dark',
+        sidebarOpen: false,
+        notificationsOpen: false,
+        modalOpen: false,
+        realTimeInterval: null,
+        chartInstances: {}
+    },
 
-    generateMockData() {
-        return {
-            revenue: {
-                week: [12000, 19000, 15000, 25000, 22000, 30000, 28000],
-                month: [45000, 52000, 48000, 61000, 58000, 72000, 68000, 75000, 82000, 79000, 88000, 95000],
-                year: [520000, 610000, 580000, 720000, 680000, 750000, 820000, 790000, 880000, 950000, 1020000, 1100000]
-            },
-            traffic: [45, 30, 15, 10],
-            transactions: [
-                { id: '#TRX-7891', customer: 'Sarah Johnson', date: '2026-06-17', amount: '$2,450.00', status: 'completed' },
-                { id: '#TRX-7892', customer: 'Michael Chen', date: '2026-06-17', amount: '$1,280.00', status: 'pending' },
-                { id: '#TRX-7893', customer: 'Emily Davis', date: '2026-06-16', amount: '$3,750.00', status: 'completed' },
-                { id: '#TRX-7894', customer: 'James Wilson', date: '2026-06-16', amount: '$890.00', status: 'failed' },
-                { id: '#TRX-7895', customer: 'Anna Brown', date: '2026-06-15', amount: '$4,200.00', status: 'completed' },
-                { id: '#TRX-7896', customer: 'David Lee', date: '2026-06-15', amount: '$1,650.00', status: 'pending' },
-                { id: '#TRX-7897', customer: 'Lisa Garcia', date: '2026-06-14', amount: '$2,980.00', status: 'completed' },
-                { id: '#TRX-7898', customer: 'Robert Taylor', date: '2026-06-14', amount: '$750.00', status: 'completed' }
-            ]
-        };
-    }
+    // Mock Data Generators
+    data: {
+        generateRandomArray(length, min, max) {
+            return Array.from({ length }, () => Math.floor(Math.random() * (max - min + 1)) + min);
+        },
 
-    initCharts() {
-        this.initRevenueChart();
-        this.initTrafficChart();
-    }
+        generateSparklineData() {
+            return this.generateRandomArray(12, 20, 100);
+        },
 
-    initRevenueChart() {
-        const canvas = document.getElementById('revenueChart');
-        if (!canvas) return;
-        
-        const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
+        generateRevenueData() {
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            return days.map(day => ({
+                label: day,
+                value: Math.floor(Math.random() * 50000) + 30000,
+                previous: Math.floor(Math.random() * 50000) + 30000
+            }));
+        },
 
-        this.charts.revenue = {
-            canvas, ctx, data: this.data.revenue.month,
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        };
+        generateTrafficData() {
+            return [
+                { label: 'Direct', value: 35, color: '#6366f1' },
+                { label: 'Organic', value: 28, color: '#06b6d4' },
+                { label: 'Social', value: 18, color: '#8b5cf6' },
+                { label: 'Referral', value: 12, color: '#10b981' },
+                { label: 'Email', value: 7, color: '#f59e0b' }
+            ];
+        },
 
-        this.drawRevenueChart();
-    }
+        generateActivityData() {
+            const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+            return hours.map(hour => ({
+                label: hour,
+                value: Math.floor(Math.random() * 2000) + 500
+            }));
+        },
 
-    drawRevenueChart() {
-        const { canvas, ctx, data, labels } = this.charts.revenue;
-        const width = canvas.width / (window.devicePixelRatio || 1);
-        const height = canvas.height / (window.devicePixelRatio || 1);
-        const padding = { top: 20, right: 20, bottom: 40, left: 60 };
-        const chartWidth = width - padding.left - padding.right;
-        const chartHeight = height - padding.top - padding.bottom;
+        generateSalesData() {
+            return [
+                { label: 'Electronics', value: 45000 },
+                { label: 'Clothing', value: 32000 },
+                { label: 'Home', value: 28000 },
+                { label: 'Sports', value: 19000 },
+                { label: 'Books', value: 12000 }
+            ];
+        },
 
-        ctx.clearRect(0, 0, width, height);
+        generateDeviceData() {
+            return [
+                { label: 'Desktop', value: 52, color: '#6366f1' },
+                { label: 'Mobile', value: 35, color: '#06b6d4' },
+                { label: 'Tablet', value: 13, color: '#8b5cf6' }
+            ];
+        },
 
-        // Grid lines
-        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= 5; i++) {
-            const y = padding.top + (chartHeight / 5) * i;
-            ctx.beginPath();
-            ctx.moveTo(padding.left, y);
-            ctx.lineTo(width - padding.right, y);
-            ctx.stroke();
+        generateHeatmapData() {
+            return Array.from({ length: 168 }, () => Math.floor(Math.random() * 100));
         }
+    },
 
-        // Y-axis labels
-        ctx.fillStyle = '#6b6b7b';
-        ctx.font = '12px Inter';
-        ctx.textAlign = 'right';
-        const maxValue = Math.max(...data) * 1.2;
-        for (let i = 0; i <= 5; i++) {
-            const value = (maxValue / 5) * (5 - i);
-            const y = padding.top + (chartHeight / 5) * i;
-            ctx.fillText('$' + (value / 1000).toFixed(0) + 'k', padding.left - 10, y + 4);
-        }
+    // ============================================
+    // Chart Engine (Canvas-based)
+    // ============================================
+    charts: {
+        createCanvas(container, width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width * 2;
+            canvas.height = height * 2;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            const ctx = canvas.getContext('2d');
+            ctx.scale(2, 2);
+            container.appendChild(canvas);
+            return { canvas, ctx, width, height };
+        },
 
-        // X-axis labels
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#6b6b7b';
-        const step = Math.ceil(labels.length / 6);
-        labels.forEach((label, i) => {
-            if (i % step === 0) {
-                const x = padding.left + (chartWidth / (labels.length - 1)) * i;
-                ctx.fillText(label, x, height - 10);
+        drawLineChart(container, data, options) {
+            options = options || {};
+            const rect = container.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height || 260;
+            const chart = this.createCanvas(container, width, height);
+            const ctx = chart.ctx;
+            const padding = options.padding || { top: 20, right: 20, bottom: 30, left: 50 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            const maxValue = Math.max(...data.map(d => d.value)) * 1.1;
+
+            // Clear
+            ctx.clearRect(0, 0, width, height);
+
+            // Grid lines
+            ctx.strokeStyle = 'rgba(148,163,184,0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding.top + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+
+                const value = Math.round(maxValue - (maxValue / 5) * i);
+                ctx.fillStyle = '#64748b';
+                ctx.font = '11px Inter';
+                ctx.textAlign = 'right';
+                ctx.fillText(this.formatNumber(value), padding.left - 8, y + 4);
             }
-        });
 
-        // Gradient fill
-        const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-        gradient.addColorStop(0, 'rgba(139, 92, 246, 0.3)');
-        gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+            // Draw line points
+            const points = data.map((d, i) => ({
+                x: padding.left + (chartWidth / (data.length - 1)) * i,
+                y: padding.top + chartHeight - ((d.value / maxValue) * chartHeight)
+            }));
 
-        // Draw area
-        ctx.beginPath();
-        ctx.moveTo(padding.left, height - padding.bottom);
-        data.forEach((value, i) => {
-            const x = padding.left + (chartWidth / (data.length - 1)) * i;
-            const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
-            if (i === 0) ctx.lineTo(x, y);
-            else {
-                const prevX = padding.left + (chartWidth / (data.length - 1)) * (i - 1);
-                const prevY = padding.top + chartHeight - (data[i - 1] / maxValue) * chartHeight;
-                const cpX = (prevX + x) / 2;
-                ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
-            }
-        });
-        ctx.lineTo(width - padding.right, height - padding.bottom);
-        ctx.closePath();
-        ctx.fillStyle = gradient;
-        ctx.fill();
+            // Gradient fill
+            const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+            gradient.addColorStop(0, 'rgba(99, 102, 241, 0.2)');
+            gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
 
-        // Draw line
-        ctx.beginPath();
-        ctx.strokeStyle = '#8b5cf6';
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        data.forEach((value, i) => {
-            const x = padding.left + (chartWidth / (data.length - 1)) * i;
-            const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
-            if (i === 0) ctx.moveTo(x, y);
-            else {
-                const prevX = padding.left + (chartWidth / (data.length - 1)) * (i - 1);
-                const prevY = padding.top + chartHeight - (data[i - 1] / maxValue) * chartHeight;
-                const cpX = (prevX + x) / 2;
-                ctx.bezierCurveTo(cpX, prevY, cpX, y, x, y);
-            }
-        });
-        ctx.stroke();
-
-        // Draw points
-        data.forEach((value, i) => {
-            const x = padding.left + (chartWidth / (data.length - 1)) * i;
-            const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
-            
             ctx.beginPath();
-            ctx.arc(x, y, 6, 0, Math.PI * 2);
-            ctx.fillStyle = '#8b5cf6';
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.arc(x, y, 10, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(139, 92, 246, 0.2)';
-            ctx.fill();
-        });
-    }
-
-    initTrafficChart() {
-        const canvas = document.getElementById('trafficChart');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-
-        const data = this.data.traffic;
-        const colors = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
-        const total = data.reduce((a, b) => a + b, 0);
-        
-        const centerX = (canvas.width / dpr) / 2;
-        const centerY = (canvas.height / dpr) / 2;
-        const radius = Math.min(centerX, centerY) - 20;
-
-        let currentAngle = -Math.PI / 2;
-
-        data.forEach((value, i) => {
-            const sliceAngle = (value / total) * 2 * Math.PI;
-            
-            // Draw slice
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
-            ctx.closePath();
-            ctx.fillStyle = colors[i];
-            ctx.fill();
-
-            // Draw white border
-            ctx.strokeStyle = '#1a1a2e';
-            ctx.lineWidth = 3;
-            ctx.stroke();
-
-            currentAngle += sliceAngle;
-        });
-
-        // Draw center hole
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius * 0.6, 0, Math.PI * 2);
-        ctx.fillStyle = '#1a1a2e';
-        ctx.fill();
-
-        // Center text
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 24px Inter';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('100%', centerX, centerY - 10);
-        
-        ctx.fillStyle = '#6b6b7b';
-        ctx.font = '12px Inter';
-        ctx.fillText('Total Traffic', centerX, centerY + 15);
-    }
-
-    populateTable() {
-        const tbody = document.getElementById('transactionTable');
-        if (!tbody) return;
-
-        tbody.innerHTML = this.data.transactions.map(trx => `
-            <tr>
-                <td><span class="trx-id">${trx.id}</span></td>
-                <td>
-                    <div class="customer-cell">
-                        <div class="customer-avatar">${trx.customer.split(' ').map(n => n[0]).join('')}</div>
-                        <span>${trx.customer}</span>
-                    </div>
-                </td>
-                <td>${trx.date}</td>
-                <td><strong>${trx.amount}</strong></td>
-                <td><span class="status-badge status-${trx.status}">${trx.status}</span></td>
-                <td>
-                    <button class="action-btn" onclick="viewTransaction('${trx.id}')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    startRealTimeUpdates() {
-        setInterval(() => {
-            this.updateStats();
-        }, 5000);
-
-        setInterval(() => {
-            this.addNewTransaction();
-        }, 8000);
-    }
-
-    updateStats() {
-        const stats = ['revenue', 'users', 'orders', 'conversion'];
-        stats.forEach(stat => {
-            const element = document.getElementById(stat);
-            if (!element) return;
-            
-            const current = parseFloat(element.textContent.replace(/[^0-9.]/g, ''));
-            const change = (Math.random() - 0.5) * 0.02;
-            const newValue = current * (1 + change);
-            
-            let formatted;
-            if (stat === 'revenue') formatted = '$' + newValue.toLocaleString('en-US', { maximumFractionDigits: 0 });
-            else if (stat === 'users') formatted = newValue.toLocaleString('en-US', { maximumFractionDigits: 0 });
-            else if (stat === 'orders') formatted = newValue.toLocaleString('en-US', { maximumFractionDigits: 0 });
-            else formatted = newValue.toFixed(2) + '%';
-            
-            element.textContent = formatted;
-            element.style.color = change > 0 ? '#10b981' : '#ef4444';
-            setTimeout(() => {
-                element.style.color = '';
-            }, 1000);
-        });
-    }
-
-    addNewTransaction() {
-        const customers = ['Alex Turner', 'Maria Silva', 'Kevin Park', 'Sophie Martin', 'Ryan Clark'];
-        const statuses = ['completed', 'pending', 'completed', 'completed', 'failed'];
-        const amounts = [1250, 3400, 890, 5670, 2100];
-        
-        const newTrx = {
-            id: '#TRX-' + (7899 + this.data.transactions.length),
-            customer: customers[Math.floor(Math.random() * customers.length)],
-            date: new Date().toISOString().split('T')[0],
-            amount: '$' + amounts[Math.floor(Math.random() * amounts.length)].toLocaleString() + '.00',
-            status: statuses[Math.floor(Math.random() * statuses.length)]
-        };
-
-        this.data.transactions.unshift(newTrx);
-        if (this.data.transactions.length > 8) this.data.transactions.pop();
-        
-        this.populateTable();
-        
-        // Flash effect on table
-        const table = document.querySelector('.table-card');
-        table.style.borderColor = 'rgba(139, 92, 246, 0.5)';
-        setTimeout(() => {
-            table.style.borderColor = '';
-        }, 300);
-    }
-
-    setupEventListeners() {
-        // Period buttons
-        document.querySelectorAll('.control-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                
-                const period = e.target.dataset.period;
-                this.charts.revenue.data = this.data.revenue[period];
-                this.charts.revenue.labels = period === 'week' 
-                    ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                    : period === 'month'
-                    ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                    : ['2021', '2022', '2023', '2024', '2025', '2026'];
-                
-                this.drawRevenueChart();
-            });
-        });
-
-        // Window resize
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                this.initCharts();
-            }, 250);
-        });
-
-        // Nav items
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                if (e.currentTarget.getAttribute('href') === '#') {
-                    e.preventDefault();
-                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                    e.currentTarget.classList.add('active');
+            ctx.moveTo(points[0].x, height - padding.bottom);
+            points.forEach((p, i) => {
+                if (i === 0) ctx.lineTo(p.x, p.y);
+                else {
+                    const prev = points[i - 1];
+                    const cpX = (prev.x + p.x) / 2;
+                    ctx.bezierCurveTo(cpX, prev.y, cpX, p.y, p.x, p.y);
                 }
             });
-        });
-    }
+            ctx.lineTo(points[points.length - 1].x, height - padding.bottom);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
 
-    animateNumbers() {
-        const stats = ['revenue', 'users', 'orders', 'conversion'];
-        const targets = [48295, 12543, 3847, 4.32];
-        
-        stats.forEach((stat, index) => {
-            const element = document.getElementById(stat);
-            if (!element) return;
-            
-            const target = targets[index];
-            const duration = 2000;
+            // Draw line stroke
+            ctx.beginPath();
+            points.forEach((p, i) => {
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else {
+                    const prev = points[i - 1];
+                    const cpX = (prev.x + p.x) / 2;
+                    ctx.bezierCurveTo(cpX, prev.y, cpX, p.y, p.x, p.y);
+                }
+            });
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Draw points
+            points.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#6366f1';
+                ctx.fill();
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+
+            // X-axis labels
+            ctx.fillStyle = '#64748b';
+            ctx.font = '11px Inter';
+            ctx.textAlign = 'center';
+            data.forEach((d, i) => {
+                if (i % Math.ceil(data.length / 7) === 0) {
+                    const x = padding.left + (chartWidth / (data.length - 1)) * i;
+                    ctx.fillText(d.label, x, height - 8);
+                }
+            });
+
+            return chart;
+        },
+
+        drawBarChart(container, data, options) {
+            options = options || {};
+            const rect = container.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height || 260;
+            const chart = this.createCanvas(container, width, height);
+            const ctx = chart.ctx;
+            const padding = options.padding || { top: 20, right: 20, bottom: 30, left: 50 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            const maxValue = Math.max(...data.map(d => d.value)) * 1.1;
+            const barWidth = (chartWidth / data.length) * 0.6;
+            const barSpacing = (chartWidth / data.length) * 0.4;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Grid
+            ctx.strokeStyle = 'rgba(148,163,184,0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding.top + (chartHeight / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+            }
+
+            // Bars
+            data.forEach((d, i) => {
+                const x = padding.left + (chartWidth / data.length) * i + barSpacing / 2;
+                const barHeight = (d.value / maxValue) * chartHeight;
+                const y = padding.top + chartHeight - barHeight;
+
+                const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+                gradient.addColorStop(0, d.color || '#6366f1');
+                gradient.addColorStop(1, (d.color || '#6366f1') + '80');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.roundRect(x, y, barWidth, barHeight, 4);
+                ctx.fill();
+            });
+
+            // Labels
+            ctx.fillStyle = '#64748b';
+            ctx.font = '11px Inter';
+            ctx.textAlign = 'center';
+            data.forEach((d, i) => {
+                const x = padding.left + (chartWidth / data.length) * i + barSpacing / 2 + barWidth / 2;
+                ctx.fillText(d.label, x, height - 8);
+            });
+
+            return chart;
+        },
+
+        drawPieChart(container, data, options) {
+            options = options || {};
+            const rect = container.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height || 260;
+            const chart = this.createCanvas(container, width, height);
+            const ctx = chart.ctx;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 20;
+            const innerRadius = options.donut ? radius * 0.6 : 0;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const total = data.reduce((sum, d) => sum + d.value, 0);
+            let currentAngle = -Math.PI / 2;
+
+            data.forEach(d => {
+                const sliceAngle = (d.value / total) * Math.PI * 2;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                if (innerRadius > 0) {
+                    ctx.arc(centerX, centerY, innerRadius, currentAngle + sliceAngle, currentAngle, true);
+                } else {
+                    ctx.lineTo(centerX, centerY);
+                }
+                ctx.closePath();
+                ctx.fillStyle = d.color;
+                ctx.fill();
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                currentAngle += sliceAngle;
+            });
+
+            // Legend
+            if (options.showLegend !== false) {
+                let legendY = 20;
+                data.forEach(d => {
+                    ctx.fillStyle = d.color;
+                    ctx.beginPath();
+                    ctx.arc(width - 80, legendY, 5, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = '11px Inter';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(d.label + ' ' + d.value + '%', width - 70, legendY + 4);
+                    legendY += 18;
+                });
+            }
+
+            return chart;
+        },
+
+        drawSparkline(container, data, color) {
+            color = color || '#6366f1';
+            const rect = container.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height || 40;
+            const chart = this.createCanvas(container, width, height);
+            const ctx = chart.ctx;
+
+            const maxValue = Math.max(...data) * 1.1;
+            const minValue = Math.min(...data) * 0.9;
+            const range = maxValue - minValue;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const points = data.map((d, i) => ({
+                x: (width / (data.length - 1)) * i,
+                y: height - ((d - minValue) / range) * height
+            }));
+
+            // Area fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, color + '20');
+            gradient.addColorStop(1, color + '00');
+
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            points.forEach((p, i) => {
+                if (i === 0) ctx.lineTo(p.x, p.y);
+                else {
+                    const prev = points[i - 1];
+                    const cpX = (prev.x + p.x) / 2;
+                    ctx.bezierCurveTo(cpX, prev.y, cpX, p.y, p.x, p.y);
+                }
+            });
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Line
+            ctx.beginPath();
+            points.forEach((p, i) => {
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else {
+                    const prev = points[i - 1];
+                    const cpX = (prev.x + p.x) / 2;
+                    ctx.bezierCurveTo(cpX, prev.y, cpX, p.y, p.x, p.y);
+                }
+            });
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            return chart;
+        },
+
+        formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+    },
+
+    // ============================================
+    // Animation Utilities
+    // ============================================
+    animate: {
+        counter(element, target, duration, prefix, suffix) {
+            duration = duration || 2000;
+            prefix = prefix || '';
+            suffix = suffix || '';
             const start = 0;
             const startTime = performance.now();
-            
-            const animate = (currentTime) => {
+            const isDecimal = target % 1 !== 0;
+
+            const update = function(currentTime) {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                const easeProgress = 1 - Math.pow(1 - progress, 3);
-                
-                const current = start + (target - start) * easeProgress;
-                
-                let formatted;
-                if (stat === 'revenue') formatted = '$' + Math.floor(current).toLocaleString();
-                else if (stat === 'users') formatted = Math.floor(current).toLocaleString();
-                else if (stat === 'orders') formatted = Math.floor(current).toLocaleString();
-                else formatted = current.toFixed(2) + '%';
-                
-                element.textContent = formatted;
-                
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = start + (target - start) * eased;
+
+                if (isDecimal) {
+                    element.textContent = prefix + current.toFixed(2) + suffix;
+                } else {
+                    element.textContent = prefix + Math.floor(current).toLocaleString() + suffix;
+                }
+
                 if (progress < 1) {
-                    requestAnimationFrame(animate);
+                    requestAnimationFrame(update);
                 }
             };
-            
-            requestAnimationFrame(animate);
+
+            requestAnimationFrame(update);
+        }
+    },
+
+    // ============================================
+    // Initialization Methods
+    // ============================================
+    init() {
+        this.initTheme();
+        this.initNavigation();
+        this.initSidebar();
+        this.initNotifications();
+        this.initModal();
+        this.initSearch();
+        this.initSettings();
+        this.initCharts();
+        this.initCounters();
+        this.initHeatmap();
+        this.initGeoMap();
+        this.initRealTime();
+        this.initLoading();
+        this.initFilterButtons();
+    },
+
+    initTheme() {
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('datapulse-theme') || 'dark';
+        this.setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = this.state.theme === 'dark' ? 'light' : 'dark';
+            this.setTheme(newTheme);
         });
-    }
-}
+    },
 
-// Global functions
-function exportData() {
-    const btn = document.querySelector('.export-btn');
-    const originalText = btn.innerHTML;
-    
-    btn.innerHTML = '<span class="loading"></span> Exporting...';
-    btn.disabled = true;
-    
-    setTimeout(() => {
-        btn.innerHTML = `
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            Exported!
-        `;
-        btn.style.background = '#10b981';
-        
+    setTheme(theme) {
+        this.state.theme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('datapulse-theme', theme);
+
+        const icon = document.querySelector('#themeToggle i');
+        if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        setTimeout(() => this.initCharts(), 100);
+    },
+
+    initNavigation() {
+        const navItems = document.querySelectorAll('.nav-item[data-page]');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = item.getAttribute('data-page');
+                this.navigateTo(page);
+
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+    },
+
+    navigateTo(page) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        const activeNav = document.querySelector('.nav-item[data-page="' + page + '"]');
+        if (activeNav) activeNav.classList.add('active');
+
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const targetPage = document.getElementById(page + '-page');
+        if (targetPage) targetPage.classList.add('active');
+
+        this.state.currentPage = page;
+
+        if (page === 'dashboard') {
+            setTimeout(() => this.initCharts(), 100);
+        }
+    },
+
+    initSidebar() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const sidebar = document.getElementById('sidebar');
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+        }
+
+        if (sidebarClose) {
+            sidebarClose.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && 
+                sidebar && !sidebar.contains(e.target) && 
+                menuToggle && !menuToggle.contains(e.target) &&
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+    },
+
+    initNotifications() {
+        const notificationsBtn = document.getElementById('notificationsBtn');
+        const notificationsDropdown = document.getElementById('notificationsDropdown');
+
+        if (notificationsBtn) {
+            notificationsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.state.notificationsOpen = !this.state.notificationsOpen;
+                if (notificationsDropdown) {
+                    notificationsDropdown.classList.toggle('active', this.state.notificationsOpen);
+                }
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (notificationsDropdown && notificationsBtn &&
+                !notificationsDropdown.contains(e.target) && !notificationsBtn.contains(e.target)) {
+                this.state.notificationsOpen = false;
+                notificationsDropdown.classList.remove('active');
+            }
+        });
+
+        const markAllRead = document.querySelector('.mark-all-read');
+        if (markAllRead) {
+            markAllRead.addEventListener('click', () => {
+                document.querySelectorAll('.notification-item').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                const dot = document.querySelector('.notification-dot');
+                if (dot) dot.remove();
+            });
+        }
+    },
+
+    initModal() {
+        const quickActionsBtn = document.getElementById('quickActionsBtn');
+        const modal = document.getElementById('quickActionsModal');
+        const modalClose = document.getElementById('modalClose');
+
+        if (quickActionsBtn && modal) {
+            quickActionsBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+            });
+        }
+
+        if (modalClose && modal) {
+            modalClose.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        }
+
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        }
+    },
+
+    initSearch() {
+        const searchInput = document.getElementById('globalSearch');
+
+        if (searchInput) {
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        this.showToast('Searching for "' + query + '"...');
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                if (searchInput) searchInput.focus();
+            }
+        });
+    },
+
+    initSettings() {
+        const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+
+        settingsNavItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.getAttribute('data-section');
+
+                settingsNavItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+                const targetSection = document.getElementById(section + '-section');
+                if (targetSection) targetSection.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.theme-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                const theme = card.getAttribute('data-theme');
+                if (theme !== 'auto') {
+                    this.setTheme(theme);
+                }
+            });
+        });
+    },
+
+    initCharts() {
+        if (this.state.currentPage !== 'dashboard') return;
+
+        const revenueContainer = document.getElementById('revenueChart');
+        if (revenueContainer) {
+            revenueContainer.innerHTML = '';
+            this.charts.drawLineChart(revenueContainer, this.data.generateRevenueData());
+        }
+
+        const trafficContainer = document.getElementById('trafficChart');
+        if (trafficContainer) {
+            trafficContainer.innerHTML = '';
+            this.charts.drawPieChart(trafficContainer, this.data.generateTrafficData(), { donut: true });
+        }
+
+        const activityContainer = document.getElementById('activityChart');
+        if (activityContainer) {
+            activityContainer.innerHTML = '';
+            this.charts.drawLineChart(activityContainer, this.data.generateActivityData());
+        }
+
+        const salesContainer = document.getElementById('salesChart');
+        if (salesContainer) {
+            salesContainer.innerHTML = '';
+            this.charts.drawBarChart(salesContainer, this.data.generateSalesData());
+        }
+
+        const deviceContainer = document.getElementById('deviceChart');
+        if (deviceContainer) {
+            deviceContainer.innerHTML = '';
+            this.charts.drawPieChart(deviceContainer, this.data.generateDeviceData(), { donut: true, showLegend: false });
+        }
+    },
+
+    initCounters() {
+        const counters = document.querySelectorAll('.kpi-value[data-target]');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+                    const target = parseFloat(element.getAttribute('data-target'));
+                    const prefix = element.getAttribute('data-prefix') || '';
+                    const suffix = element.getAttribute('data-suffix') || '';
+
+                    this.animate.counter(element, target, 2000, prefix, suffix);
+                    observer.unobserve(element);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => observer.observe(counter));
+    },
+
+    initSparklines() {
+        const sparklineIds = ['sparkline1', 'sparkline2', 'sparkline3', 'sparkline4', 'sparkline5', 'sparkline6'];
+        const colors = ['#6366f1', '#06b6d4', '#ef4444', '#10b981', '#ec4899', '#f59e0b'];
+
+        sparklineIds.forEach((id, i) => {
+            const container = document.getElementById(id);
+            if (container) {
+                container.innerHTML = '';
+                this.charts.drawSparkline(container, this.data.generateSparklineData(), colors[i]);
+            }
+        });
+    },
+
+    initHeatmap() {
+        const heatmapContainer = document.getElementById('heatmap');
+        if (!heatmapContainer) return;
+
+        heatmapContainer.innerHTML = '';
+        const data = this.data.generateHeatmapData();
+        const maxValue = Math.max(...data);
+
+        data.forEach((value) => {
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
+            const intensity = value / maxValue;
+            const hue = 240 + (1 - intensity) * 60;
+            const saturation = 70 + intensity * 30;
+            const lightness = 20 + intensity * 40;
+            cell.style.backgroundColor = 'hsl(' + hue + ', ' + saturation + '%, ' + lightness + '%)';
+            cell.setAttribute('data-value', value);
+            heatmapContainer.appendChild(cell);
+        });
+    },
+
+    initGeoMap() {
+        const tooltip = document.getElementById('geoTooltip');
+        const lands = document.querySelectorAll('.world-map .land');
+
+        lands.forEach(land => {
+            land.addEventListener('mouseenter', () => {
+                const country = land.getAttribute('data-country');
+                const value = land.getAttribute('data-value');
+
+                if (tooltip) {
+                    tooltip.innerHTML = '<h4>' + country + '</h4><p>' + parseInt(value).toLocaleString() + ' users</p>';
+                    tooltip.classList.add('visible');
+                }
+            });
+
+            land.addEventListener('mousemove', (e) => {
+                const geoMap = document.querySelector('.geo-map');
+                if (tooltip && geoMap) {
+                    const rect = geoMap.getBoundingClientRect();
+                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                    tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+                }
+            });
+
+            land.addEventListener('mouseleave', () => {
+                if (tooltip) tooltip.classList.remove('visible');
+            });
+        });
+    },
+
+    initRealTime() {
+        this.state.realTimeInterval = setInterval(() => {
+            if (this.state.currentPage === 'dashboard') {
+                this.initSparklines();
+                this.updateKPIValues();
+            }
+        }, 5000);
+
+        this.initSparklines();
+    },
+
+    updateKPIValues() {
+        const kpiValues = document.querySelectorAll('.kpi-value[data-target]');
+        kpiValues.forEach(el => {
+            const target = parseFloat(el.getAttribute('data-target'));
+            const variation = (Math.random() - 0.5) * 0.02;
+            const newValue = target * (1 + variation);
+            const prefix = el.getAttribute('data-prefix') || '';
+            const suffix = el.getAttribute('data-suffix') || '';
+
+            if (target % 1 !== 0) {
+                el.textContent = prefix + newValue.toFixed(2) + suffix;
+            } else {
+                el.textContent = prefix + Math.floor(newValue).toLocaleString() + suffix;
+            }
+        });
+    },
+
+    initLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 1500);
+        }
+    },
+
+    initFilterButtons() {
+        document.querySelectorAll('.date-filter').forEach(filter => {
+            const buttons = filter.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    if (this.state.currentPage === 'dashboard') {
+                        this.initCharts();
+                        this.initSparklines();
+                    }
+                });
+            });
+        });
+    },
+
+    showToast(message) {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '24px';
+        toast.style.right = '24px';
+        toast.style.background = 'var(--glass-bg)';
+        toast.style.backdropFilter = 'blur(12px)';
+        toast.style.border = '1px solid var(--glass-border)';
+        toast.style.borderRadius = '12px';
+        toast.style.padding = '14px 24px';
+        toast.style.color = 'var(--text-primary)';
+        toast.style.fontSize = '0.9rem';
+        toast.style.zIndex = '9999';
+        toast.style.boxShadow = 'var(--shadow-lg)';
+        toast.style.animation = 'slideIn 0.3s ease';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
         setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.background = '';
-            btn.disabled = false;
-        }, 2000);
-    }, 1500);
-}
+            toast.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+};
 
-function viewTransaction(id) {
-    alert(`Viewing transaction ${id}\n\nIn a real app, this would open a detailed view.`);
-}
+// ============================================
+// Global Event Listeners
+// ============================================
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    new DataPulseDashboard();
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        DataPulse.initCharts();
+        DataPulse.initSparklines();
+    }, 250);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    DataPulse.init();
+});
+
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100px); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);

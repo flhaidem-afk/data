@@ -3,268 +3,1355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataPulse - Analytics Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>DataPulse | Enterprise Analytics Dashboard</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<base target="_blank">
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                        <rect width="32" height="32" rx="8" fill="#8b5cf6"/>
-                        <path d="M8 20L12 16L16 20L24 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="24" cy="12" r="2" fill="white"/>
-                    </svg>
-                    <span>DataPulse</span>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-wave-square"></i>
+                </div>
+                <span class="logo-text">DataPulse</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <span class="nav-label">Main</span>
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-label">Data</span>
+                <a href="#" class="nav-item" data-page="sources">
+                    <i class="fas fa-plug"></i>
+                    <span>Data Sources</span>
+                </a>
+                <a href="#" class="nav-item" data-page="alerts">
+                    <i class="fas fa-bell"></i>
+                    <span>Alerts</span>
+                    <span class="nav-badge">3</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-label">Team</span>
+                <a href="#" class="nav-item" data-page="team">
+                    <i class="fas fa-users"></i>
+                    <span>Team</span>
+                </a>
+                <a href="#" class="nav-item" data-page="help">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help Center</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-label">System</span>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="storage-info">
+                <div class="storage-header">
+                    <span>Storage</span>
+                    <span>78%</span>
+                </div>
+                <div class="storage-bar">
+                    <div class="storage-fill" style="width: 78%"></div>
                 </div>
             </div>
-            
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="3" y="14" width="7" height="7" rx="1"/>
-                        <rect x="14" y="14" width="7" height="7" rx="1"/>
-                    </svg>
-                    Dashboard
-                </a>
-                <a href="#" class="nav-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    Analytics
-                </a>
-                <a href="#" class="nav-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v20M2 12h20"/>
-                    </svg>
-                    Reports
-                </a>
-                <a href="#" class="nav-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 010 7.75"/>
-                    </svg>
-                    Users
-                </a>
-                <a href="#" class="nav-item">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                    Security
-                </a>
-            </nav>
+        </div>
+    </aside>
 
-            <div class="sidebar-footer">
-                <div class="user-profile">
-                    <div class="avatar">JD</div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <div class="top-nav-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search analytics, reports, metrics..." id="globalSearch">
+                    <span class="search-shortcut">⌘K</span>
+                </div>
+            </div>
+
+            <div class="top-nav-right">
+                <button class="nav-btn" id="quickActionsBtn" title="Quick Actions">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="nav-btn" id="themeToggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="notifications-wrapper">
+                    <button class="nav-btn" id="notificationsBtn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <h3>Notifications</h3>
+                            <button class="mark-all-read">Mark all read</button>
+                        </div>
+                        <div class="notifications-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon critical">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>Revenue dropped 12% below forecast</p>
+                                    <span>2 min ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon high">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>Traffic spike detected on landing page</p>
+                                    <span>15 min ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon medium">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>New team member joined Analytics</p>
+                                    <span>1 hour ago</span>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon low">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p>Weekly report generated successfully</p>
+                                    <span>3 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-profile" id="userProfile">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Morgan&background=6366f1&color=fff" alt="User" class="user-avatar">
                     <div class="user-info">
-                        <span class="user-name">John Doe</span>
+                        <span class="user-name">Alex Morgan</span>
                         <span class="user-role">Admin</span>
                     </div>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
-        </aside>
+        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Header -->
-            <header class="top-header">
-                <div class="header-left">
-                    <h1>Dashboard Overview</h1>
-                    <p class="breadcrumb">Welcome back! Here's what's happening today.</p>
-                </div>
-                <div class="header-right">
-                    <div class="search-box">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="M21 21l-4.35-4.35"/>
-                        </svg>
-                        <input type="text" placeholder="Search...">
+        <!-- Page Content -->
+        <div class="page-content" id="pageContent">
+            <!-- Dashboard Page -->
+            <div class="page active" id="dashboard-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p class="page-subtitle">Real-time overview of your business metrics</p>
                     </div>
-                    <button class="notification-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                            <path d="M13.73 21a2 2 0 01-3.46 0"/>
-                        </svg>
-                        <span class="notification-badge">3</span>
+                    <div class="page-actions">
+                        <div class="date-filter">
+                            <button class="filter-btn active">Today</button>
+                            <button class="filter-btn">Week</button>
+                            <button class="filter-btn">Month</button>
+                            <button class="filter-btn">Year</button>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon revenue">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="kpi-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>12.5%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value" data-target="2847500" data-prefix="$">$0</h3>
+                            <p class="kpi-label">Total Revenue</p>
+                        </div>
+                        <div class="kpi-sparkline" id="sparkline1"></div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon users">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="kpi-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>8.2%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value" data-target="45231">0</h3>
+                            <p class="kpi-label">Active Users</p>
+                        </div>
+                        <div class="kpi-sparkline" id="sparkline2"></div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon conversion">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="kpi-trend down">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>2.1%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value" data-target="3.24" data-suffix="%">0%</h3>
+                            <p class="kpi-label">Conversion Rate</p>
+                        </div>
+                        <div class="kpi-sparkline" id="sparkline3"></div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon growth">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="kpi-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>18.7%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value" data-target="24.8" data-suffix="%">0%</h3>
+                            <p class="kpi-label">Monthly Growth</p>
+                        </div>
+                        <div class="kpi-sparkline" id="sparkline4"></div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon retention">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="kpi-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>5.3%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value" data-target="89.2" data-suffix="%">0%</h3>
+                            <p class="kpi-label">Customer Retention</p>
+                        </div>
+                        <div class="kpi-sparkline" id="sparkline5"></div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon transactions">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="kpi-trend up">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>15.1%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-body">
+                            <h3 class="kpi-value" data-target="128450">0</h3>
+                            <p class="kpi-label">Total Transactions</p>
+                        </div>
+                        <div class="kpi-sparkline" id="sparkline6"></div>
+                    </div>
+                </div>
+
+                <!-- Main Charts Section -->
+                <div class="charts-row">
+                    <div class="chart-card large">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Revenue Tracking</h3>
+                                <p>Real-time revenue performance</p>
+                            </div>
+                            <div class="chart-controls">
+                                <select class="chart-select">
+                                    <option>Last 7 Days</option>
+                                    <option>Last 30 Days</option>
+                                    <option>This Quarter</option>
+                                    <option>This Year</option>
+                                </select>
+                                <button class="chart-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Traffic Sources</h3>
+                                <p>Where users come from</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>User Activity</h3>
+                                <p>Daily active sessions</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Sales Performance</h3>
+                                <p>By product category</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Device Usage</h3>
+                                <p>Platform distribution</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="deviceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Geographic & Heatmap -->
+                <div class="charts-row">
+                    <div class="chart-card large">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Geographic Distribution</h3>
+                                <p>User locations worldwide</p>
+                            </div>
+                            <div class="chart-controls">
+                                <button class="chart-btn active">Map</button>
+                                <button class="chart-btn">List</button>
+                            </div>
+                        </div>
+                        <div class="chart-body geo-body">
+                            <div class="geo-map" id="geoMap">
+                                <!-- SVG World Map -->
+                                <svg viewBox="0 0 1000 500" class="world-map">
+                                    <defs>
+                                        <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Simplified world map paths -->
+                                    <path class="land" d="M150,120 Q180,100 220,110 T280,130 T320,150 L310,180 Q280,200 250,190 T200,180 T150,170 Z" fill="#334155" data-country="North America" data-value="34200"/>
+                                    <path class="land active" d="M260,200 Q280,220 300,240 T340,280 T360,320 L340,350 Q300,340 280,320 T260,280 T250,240 Z" fill="#6366f1" data-country="South America" data-value="18500"/>
+                                    <path class="land" d="M450,100 Q480,90 520,95 T580,110 T620,130 L610,160 Q580,170 550,165 T500,155 T460,140 Z" fill="#334155" data-country="Europe" data-value="28900"/>
+                                    <path class="land active" d="M480,180 Q520,170 560,180 T620,200 T660,230 L640,270 Q600,280 560,270 T500,250 T470,220 Z" fill="#8b5cf6" data-country="Africa" data-value="15600"/>
+                                    <path class="land active" d="M650,90 Q700,80 750,90 T820,110 T880,130 L870,170 Q820,180 770,170 T700,150 T650,130 Z" fill="#06b6d4" data-country="Asia" data-value="45600"/>
+                                    <path class="land" d="M750,250 Q780,260 800,280 T830,320 L810,340 Q780,330 760,310 T740,270 Z" fill="#334155" data-country="Australia" data-value="9800"/>
+                                </svg>
+                                <div class="geo-tooltip" id="geoTooltip"></div>
+                            </div>
+                            <div class="geo-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #06b6d4"></span>
+                                    <span>Asia - 45,600 users</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #6366f1"></span>
+                                    <span>North America - 34,200 users</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #8b5cf6"></span>
+                                    <span>Europe - 28,900 users</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #6366f1"></span>
+                                    <span>South America - 18,500 users</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #334155"></span>
+                                    <span>Africa - 15,600 users</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot" style="background: #334155"></span>
+                                    <span>Australia - 9,800 users</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3>Activity Heatmap</h3>
+                                <p>User engagement by hour</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="heatmap" id="heatmap"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights Panel -->
+                <div class="insights-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-lightbulb"></i> AI Insights</h2>
+                        <span class="insights-badge">6 new</span>
+                    </div>
+                    <div class="insights-grid">
+                        <div class="insight-card">
+                            <div class="insight-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Top Performing Metric</h4>
+                                <p>Mobile conversion rate increased by 23% this week, outperforming all other channels.</p>
+                                <span class="insight-time">Updated 2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon opportunity">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Growth Opportunity</h4>
+                                <p>Untapped potential in APAC region. Consider targeted campaigns for Japan and India.</p>
+                                <span class="insight-time">Updated 4 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon trend">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Customer Behavior Trend</h4>
+                                <p>Weekend engagement up 34%. Users prefer mobile app over web on Saturdays.</p>
+                                <span class="insight-time">Updated 6 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon prediction">
+                                <i class="fas fa-crystal-ball"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Revenue Prediction</h4>
+                                <p>Q3 forecast: $3.2M (+15% YoY). Key driver: Enterprise plan upgrades.</p>
+                                <span class="insight-time">Updated 8 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div class="page" id="analytics-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Analytics</h1>
+                        <p class="page-subtitle">Deep dive into your data</p>
+                    </div>
+                    <div class="page-actions">
+                        <div class="date-filter">
+                            <button class="filter-btn">Daily</button>
+                            <button class="filter-btn active">Weekly</button>
+                            <button class="filter-btn">Monthly</button>
+                            <button class="filter-btn">Quarterly</button>
+                            <button class="filter-btn">Yearly</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-placeholder">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-chart-area"></i>
+                    </div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Detailed analytics with trend analysis, cohort analysis, and funnel visualization.</p>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div class="page" id="reports-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Reports</h1>
+                        <p class="page-subtitle">Generate and manage custom reports</p>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Report
                     </button>
-                    <button class="export-btn" onclick="exportData()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                            <polyline points="7 10 12 15 17 10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
-                        </svg>
-                        Export
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <div class="report-icon sales">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="report-info">
+                            <h4>Sales Reports</h4>
+                            <p>Revenue, transactions, and sales funnel</p>
+                            <span class="report-count">12 reports</span>
+                        </div>
+                        <button class="report-action"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon marketing">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="report-info">
+                            <h4>Marketing Reports</h4>
+                            <p>Campaigns, ROI, and channel performance</p>
+                            <span class="report-count">8 reports</span>
+                        </div>
+                        <button class="report-action"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon customer">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="report-info">
+                            <h4>Customer Reports</h4>
+                            <p>Behavior, retention, and segmentation</p>
+                            <span class="report-count">15 reports</span>
+                        </div>
+                        <button class="report-action"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon financial">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="report-info">
+                            <h4>Financial Reports</h4>
+                            <p>P&L, cash flow, and forecasting</p>
+                            <span class="report-count">6 reports</span>
+                        </div>
+                        <button class="report-action"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon performance">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="report-info">
+                            <h4>Performance Reports</h4>
+                            <p>System and team performance metrics</p>
+                            <span class="report-count">9 reports</span>
+                        </div>
+                        <button class="report-action"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="saved-reports">
+                    <h3>Saved Reports</h3>
+                    <div class="reports-table-wrapper">
+                        <table class="reports-table">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th>Category</th>
+                                    <th>Last Run</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="report-name">
+                                            <i class="fas fa-file-alt"></i>
+                                            <span>Q2 Revenue Summary</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="tag sales">Sales</span></td>
+                                    <td>Today, 9:00 AM</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                    <td>
+                                        <button class="table-btn"><i class="fas fa-download"></i></button>
+                                        <button class="table-btn"><i class="fas fa-share"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="report-name">
+                                            <i class="fas fa-file-alt"></i>
+                                            <span>Customer Acquisition Funnel</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="tag marketing">Marketing</span></td>
+                                    <td>Yesterday, 4:30 PM</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                    <td>
+                                        <button class="table-btn"><i class="fas fa-download"></i></button>
+                                        <button class="table-btn"><i class="fas fa-share"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="report-name">
+                                            <i class="fas fa-file-alt"></i>
+                                            <span>Monthly Financial Overview</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="tag financial">Financial</span></td>
+                                    <td>Jun 15, 2026</td>
+                                    <td><span class="status scheduled">Scheduled</span></td>
+                                    <td>
+                                        <button class="table-btn"><i class="fas fa-download"></i></button>
+                                        <button class="table-btn"><i class="fas fa-share"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="report-name">
+                                            <i class="fas fa-file-alt"></i>
+                                            <span>User Retention Analysis</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="tag customer">Customer</span></td>
+                                    <td>Jun 14, 2026</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                    <td>
+                                        <button class="table-btn"><i class="fas fa-download"></i></button>
+                                        <button class="table-btn"><i class="fas fa-share"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sources Page -->
+            <div class="page" id="sources-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Data Sources</h1>
+                        <p class="page-subtitle">Manage connected integrations</p>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Source
                     </button>
                 </div>
-            </header>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon revenue">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"/>
-                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
-                            </svg>
-                        </div>
-                        <span class="stat-trend up">+12.5%</span>
-                    </div>
-                    <div class="stat-value" id="revenue">$48,295</div>
-                    <div class="stat-label">Total Revenue</div>
-                    <div class="mini-chart">
-                        <svg viewBox="0 0 100 30" preserveAspectRatio="none">
-                            <path class="sparkline" d="M0,25 Q10,20 20,22 T40,15 T60,18 T80,10 T100,12" />
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon users">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                                <path d="M16 3.13a4 4 0 010 7.75"/>
-                            </svg>
-                        </div>
-                        <span class="stat-trend up">+8.2%</span>
-                    </div>
-                    <div class="stat-value" id="users">12,543</div>
-                    <div class="stat-label">Active Users</div>
-                    <div class="mini-chart">
-                        <svg viewBox="0 0 100 30" preserveAspectRatio="none">
-                            <path class="sparkline" d="M0,20 Q15,25 30,18 T60,15 T100,8" stroke="#10b981"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon orders">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                                <line x1="3" y1="6" x2="21" y2="6"/>
-                                <path d="M16 10a4 4 0 01-8 0"/>
-                            </svg>
-                        </div>
-                        <span class="stat-trend down">-2.4%</span>
-                    </div>
-                    <div class="stat-value" id="orders">3,847</div>
-                    <div class="stat-label">Total Orders</div>
-                    <div class="mini-chart">
-                        <svg viewBox="0 0 100 30" preserveAspectRatio="none">
-                            <path class="sparkline" d="M0,10 Q20,15 40,12 T70,20 T100,25" stroke="#ef4444"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon conversion">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                                <polyline points="17 6 23 6 23 12"/>
-                            </svg>
-                        </div>
-                        <span class="stat-trend up">+5.7%</span>
-                    </div>
-                    <div class="stat-value" id="conversion">4.32%</div>
-                    <div class="stat-label">Conversion Rate</div>
-                    <div class="mini-chart">
-                        <svg viewBox="0 0 100 30" preserveAspectRatio="none">
-                            <path class="sparkline" d="M0,28 Q25,20 50,22 T75,12 T100,15" stroke="#f59e0b"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="charts-section">
-                <div class="chart-card main-chart">
-                    <div class="chart-header">
-                        <div>
-                            <h3>Revenue Overview</h3>
-                            <p>Monthly revenue performance</p>
-                        </div>
-                        <div class="chart-controls">
-                            <button class="control-btn active" data-period="week">Week</button>
-                            <button class="control-btn" data-period="month">Month</button>
-                            <button class="control-btn" data-period="year">Year</button>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card secondary-chart">
-                    <div class="chart-header">
-                        <h3>Traffic Sources</h3>
-                        <p>Where your users come from</p>
-                    </div>
-                    <div class="chart-container doughnut-container">
-                        <canvas id="trafficChart"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #8b5cf6;"></span>
-                                <span>Direct</span>
-                                <span class="legend-value">45%</span>
+                <div class="sources-grid">
+                    <div class="source-card connected">
+                        <div class="source-header">
+                            <div class="source-icon google">
+                                <i class="fab fa-google"></i>
                             </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #10b981;"></span>
-                                <span>Organic</span>
-                                <span class="legend-value">30%</span>
+                            <div class="source-status">
+                                <span class="status-dot connected"></span>
+                                <span>Connected</span>
                             </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #f59e0b;"></span>
-                                <span>Social</span>
-                                <span class="legend-value">15%</span>
+                        </div>
+                        <h4>Google Analytics</h4>
+                        <p>Web traffic and user behavior data</p>
+                        <div class="source-meta">
+                            <span><i class="fas fa-sync"></i> Synced 2 min ago</span>
+                            <span><i class="fas fa-database"></i> 2.4M records</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card connected">
+                        <div class="source-header">
+                            <div class="source-icon stripe">
+                                <i class="fab fa-stripe"></i>
                             </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #ef4444;"></span>
-                                <span>Referral</span>
-                                <span class="legend-value">10%</span>
+                            <div class="source-status">
+                                <span class="status-dot connected"></span>
+                                <span>Connected</span>
                             </div>
+                        </div>
+                        <h4>Stripe</h4>
+                        <p>Payment processing and revenue data</p>
+                        <div class="source-meta">
+                            <span><i class="fas fa-sync"></i> Synced 5 min ago</span>
+                            <span><i class="fas fa-database"></i> 856K records</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card connected">
+                        <div class="source-header">
+                            <div class="source-icon shopify">
+                                <i class="fab fa-shopify"></i>
+                            </div>
+                            <div class="source-status">
+                                <span class="status-dot connected"></span>
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                        <h4>Shopify</h4>
+                        <p>E-commerce and product data</p>
+                        <div class="source-meta">
+                            <span><i class="fas fa-sync"></i> Synced 12 min ago</span>
+                            <span><i class="fas fa-database"></i> 1.2M records</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card connected">
+                        <div class="source-header">
+                            <div class="source-icon salesforce">
+                                <i class="fab fa-salesforce"></i>
+                            </div>
+                            <div class="source-status">
+                                <span class="status-dot connected"></span>
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                        <h4>Salesforce</h4>
+                        <p>CRM and sales pipeline data</p>
+                        <div class="source-meta">
+                            <span><i class="fas fa-sync"></i> Synced 1 hour ago</span>
+                            <span><i class="fas fa-database"></i> 3.1M records</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card warning">
+                        <div class="source-header">
+                            <div class="source-icon hubspot">
+                                <i class="fab fa-hubspot"></i>
+                            </div>
+                            <div class="source-status">
+                                <span class="status-dot warning"></span>
+                                <span>Sync Delayed</span>
+                            </div>
+                        </div>
+                        <h4>HubSpot</h4>
+                        <p>Marketing automation and leads</p>
+                        <div class="source-meta">
+                            <span><i class="fas fa-exclamation-triangle"></i> Last sync 3 hours ago</span>
+                            <span><i class="fas fa-database"></i> 567K records</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon database">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="source-status">
+                                <span class="status-dot connected"></span>
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                        <h4>Internal Database</h4>
+                        <p>Custom API and internal data</p>
+                        <div class="source-meta">
+                            <span><i class="fas fa-sync"></i> Real-time</span>
+                            <span><i class="fas fa-database"></i> 5.8M records</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Activity Table -->
-            <div class="table-card">
-                <div class="table-header">
-                    <h3>Recent Transactions</h3>
-                    <button class="view-all-btn">View All</button>
+            <!-- Alerts Page -->
+            <div class="page" id="alerts-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Alerts & Monitoring</h1>
+                        <p class="page-subtitle">System alerts and anomaly detection</p>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Create Alert
+                    </button>
                 </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Customer</th>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionTable">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
+
+                <div class="alerts-summary">
+                    <div class="alert-stat critical">
+                        <span class="alert-count">2</span>
+                        <span class="alert-label">Critical</span>
+                    </div>
+                    <div class="alert-stat high">
+                        <span class="alert-count">3</span>
+                        <span class="alert-label">High</span>
+                    </div>
+                    <div class="alert-stat medium">
+                        <span class="alert-count">7</span>
+                        <span class="alert-label">Medium</span>
+                    </div>
+                    <div class="alert-stat low">
+                        <span class="alert-count">12</span>
+                        <span class="alert-label">Low</span>
+                    </div>
+                </div>
+
+                <div class="alerts-list">
+                    <div class="alert-card critical">
+                        <div class="alert-priority">
+                            <span class="priority-badge critical">Critical</span>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="alert-details">
+                                <h4>Revenue Drop Alert</h4>
+                                <p>Revenue decreased by 12% compared to yesterday's forecast. Current: $82,400 vs Expected: $93,600.</p>
+                                <div class="alert-meta">
+                                    <span><i class="fas fa-clock"></i> 2 min ago</span>
+                                    <span><i class="fas fa-tag"></i> Financial</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-sm">Investigate</button>
+                            <button class="btn btn-sm btn-ghost">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <div class="alert-card critical">
+                        <div class="alert-priority">
+                            <span class="priority-badge critical">Critical</span>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="alert-details">
+                                <h4>Server Response Time</h4>
+                                <p>API response time exceeded 2000ms threshold. Current average: 2,340ms on /api/v2/analytics.</p>
+                                <div class="alert-meta">
+                                    <span><i class="fas fa-clock"></i> 8 min ago</span>
+                                    <span><i class="fas fa-tag"></i> Infrastructure</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-sm">Investigate</button>
+                            <button class="btn btn-sm btn-ghost">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <div class="alert-card high">
+                        <div class="alert-priority">
+                            <span class="priority-badge high">High</span>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="alert-details">
+                                <h4>Traffic Spike Detected</h4>
+                                <p>Unusual traffic spike on landing page. 340% increase in the last 30 minutes. Possible bot activity.</p>
+                                <div class="alert-meta">
+                                    <span><i class="fas fa-clock"></i> 15 min ago</span>
+                                    <span><i class="fas fa-tag"></i> Traffic</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-sm">Investigate</button>
+                            <button class="btn btn-sm btn-ghost">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <div class="alert-card high">
+                        <div class="alert-priority">
+                            <span class="priority-badge high">High</span>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="alert-details">
+                                <h4>Conversion Rate Change</h4>
+                                <p>Checkout conversion rate dropped from 4.2% to 3.1% after the latest deployment.</p>
+                                <div class="alert-meta">
+                                    <span><i class="fas fa-clock"></i> 45 min ago</span>
+                                    <span><i class="fas fa-tag"></i> Conversion</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-sm">Investigate</button>
+                            <button class="btn btn-sm btn-ghost">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <div class="alert-card medium">
+                        <div class="alert-priority">
+                            <span class="priority-badge medium">Medium</span>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="alert-details">
+                                <h4>User Activity Anomaly</h4>
+                                <p>Inactive user segment showing unusual re-engagement patterns. 23% of dormant users returned.</p>
+                                <div class="alert-meta">
+                                    <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                                    <span><i class="fas fa-tag"></i> Engagement</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-sm">Investigate</button>
+                            <button class="btn btn-sm btn-ghost">Dismiss</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
+
+            <!-- Team Page -->
+            <div class="page" id="team-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Team</h1>
+                        <p class="page-subtitle">Manage team members and permissions</p>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        Invite Member
+                    </button>
+                </div>
+
+                <div class="team-stats">
+                    <div class="team-stat">
+                        <span class="stat-value">12</span>
+                        <span class="stat-label">Total Members</span>
+                    </div>
+                    <div class="team-stat">
+                        <span class="stat-value">3</span>
+                        <span class="stat-label">Admins</span>
+                    </div>
+                    <div class="team-stat">
+                        <span class="stat-value">7</span>
+                        <span class="stat-label">Analysts</span>
+                    </div>
+                    <div class="team-stat">
+                        <span class="stat-value">2</span>
+                        <span class="stat-label">Viewers</span>
+                    </div>
+                </div>
+
+                <div class="team-members">
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Alex+Morgan&background=6366f1&color=fff" alt="Alex Morgan">
+                            <span class="member-status online"></span>
+                        </div>
+                        <div class="member-info">
+                            <h4>Alex Morgan</h4>
+                            <p>Product Manager</p>
+                            <span class="role-badge admin">Admin</span>
+                        </div>
+                        <div class="member-actions">
+                            <button class="table-btn"><i class="fas fa-envelope"></i></button>
+                            <button class="table-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Sarah+Chen&background=06b6d4&color=fff" alt="Sarah Chen">
+                            <span class="member-status online"></span>
+                        </div>
+                        <div class="member-info">
+                            <h4>Sarah Chen</h4>
+                            <p>Data Analyst</p>
+                            <span class="role-badge analyst">Analyst</span>
+                        </div>
+                        <div class="member-actions">
+                            <button class="table-btn"><i class="fas fa-envelope"></i></button>
+                            <button class="table-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Mike+Johnson&background=8b5cf6&color=fff" alt="Mike Johnson">
+                            <span class="member-status away"></span>
+                        </div>
+                        <div class="member-info">
+                            <h4>Mike Johnson</h4>
+                            <p>Senior Developer</p>
+                            <span class="role-badge admin">Admin</span>
+                        </div>
+                        <div class="member-actions">
+                            <button class="table-btn"><i class="fas fa-envelope"></i></button>
+                            <button class="table-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Emily+Davis&background=ec4899&color=fff" alt="Emily Davis">
+                            <span class="member-status offline"></span>
+                        </div>
+                        <div class="member-info">
+                            <h4>Emily Davis</h4>
+                            <p>Marketing Lead</p>
+                            <span class="role-badge viewer">Viewer</span>
+                        </div>
+                        <div class="member-actions">
+                            <button class="table-btn"><i class="fas fa-envelope"></i></button>
+                            <button class="table-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-logs">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p><strong>Sarah Chen</strong> generated the <strong>Q2 Revenue Report</strong></p>
+                                <span>2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p><strong>Mike Johnson</strong> updated <strong>Data Source Settings</strong></p>
+                                <span>4 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p><strong>Alex Morgan</strong> invited <strong>David Kim</strong> to the team</p>
+                                <span>Yesterday</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p><strong>Emily Davis</strong> created a new <strong>Marketing Dashboard</strong></p>
+                                <span>2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="settings-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Settings</h1>
+                        <p class="page-subtitle">Configure your account and preferences</p>
+                    </div>
+                </div>
+
+                <div class="settings-layout">
+                    <div class="settings-nav">
+                        <button class="settings-nav-item active" data-section="profile">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </button>
+                        <button class="settings-nav-item" data-section="notifications">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifications</span>
+                        </button>
+                        <button class="settings-nav-item" data-section="theme">
+                            <i class="fas fa-palette"></i>
+                            <span>Appearance</span>
+                        </button>
+                        <button class="settings-nav-item" data-section="security">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Security</span>
+                        </button>
+                        <button class="settings-nav-item" data-section="api">
+                            <i class="fas fa-key"></i>
+                            <span>API Keys</span>
+                        </button>
+                        <button class="settings-nav-item" data-section="integrations">
+                            <i class="fas fa-plug"></i>
+                            <span>Integrations</span>
+                        </button>
+                    </div>
+
+                    <div class="settings-content">
+                        <div class="settings-section active" id="profile-section">
+                            <h3>Profile Settings</h3>
+                            <div class="profile-form">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" value="Alex Morgan" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" value="alex.morgan@datapulse.io" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <input type="text" value="Product Manager" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bio</label>
+                                    <textarea class="form-input" rows="3">Analytics enthusiast focused on data-driven product decisions.</textarea>
+                                </div>
+                                <button class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="notifications-section">
+                            <h3>Notification Preferences</h3>
+                            <div class="notification-settings">
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Email Alerts</h4>
+                                        <p>Receive critical alerts via email</p>
+                                    </div>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Push Notifications</h4>
+                                        <p>Browser push notifications for real-time alerts</p>
+                                    </div>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Weekly Digest</h4>
+                                        <p>Summary of key metrics every Monday</p>
+                                    </div>
+                                    <label class="toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Report Ready</h4>
+                                        <p>Notify when scheduled reports are generated</p>
+                                    </div>
+                                    <label class="toggle">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="theme-section">
+                            <h3>Appearance</h3>
+                            <div class="theme-options">
+                                <div class="theme-card active" data-theme="dark">
+                                    <div class="theme-preview dark-preview"></div>
+                                    <span>Dark Mode</span>
+                                </div>
+                                <div class="theme-card" data-theme="light">
+                                    <div class="theme-preview light-preview"></div>
+                                    <span>Light Mode</span>
+                                </div>
+                                <div class="theme-card" data-theme="auto">
+                                    <div class="theme-preview auto-preview"></div>
+                                    <span>System</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="security-section">
+                            <h3>Security Settings</h3>
+                            <div class="security-settings">
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Two-Factor Authentication</h4>
+                                        <p>Add an extra layer of security</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-primary">Enable</button>
+                                </div>
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Session Management</h4>
+                                        <p>Manage active sessions</p>
+                                    </div>
+                                    <button class="btn btn-sm">View</button>
+                                </div>
+                                <div class="setting-item">
+                                    <div>
+                                        <h4>Change Password</h4>
+                                        <p>Last changed 30 days ago</p>
+                                    </div>
+                                    <button class="btn btn-sm">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="api-section">
+                            <h3>API Keys</h3>
+                            <div class="api-keys">
+                                <div class="api-key-card">
+                                    <div class="api-key-info">
+                                        <h4>Production API Key</h4>
+                                        <p>Used for live data integration</p>
+                                    </div>
+                                    <div class="api-key-value">
+                                        <code>dp_live_xxxxxxxxxxxx</code>
+                                        <button class="table-btn"><i class="fas fa-copy"></i></button>
+                                    </div>
+                                </div>
+                                <div class="api-key-card">
+                                    <div class="api-key-info">
+                                        <h4>Development API Key</h4>
+                                        <p>For testing and development</p>
+                                    </div>
+                                    <div class="api-key-value">
+                                        <code>dp_dev_xxxxxxxxxxxx</code>
+                                        <button class="table-btn"><i class="fas fa-copy"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="integrations-section">
+                            <h3>Integrations</h3>
+                            <p>Manage third-party integrations from the Data Sources page.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Center Page -->
+            <div class="page" id="help-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Help Center</h1>
+                        <p class="page-subtitle">Documentation and support</p>
+                    </div>
+                </div>
+                <div class="help-grid">
+                    <div class="help-card">
+                        <i class="fas fa-book"></i>
+                        <h4>Documentation</h4>
+                        <p>Comprehensive guides and API references</p>
+                    </div>
+                    <div class="help-card">
+                        <i class="fas fa-video"></i>
+                        <h4>Tutorials</h4>
+                        <p>Video walkthroughs and quick starts</p>
+                    </div>
+                    <div class="help-card">
+                        <i class="fas fa-comments"></i>
+                        <h4>Community</h4>
+                        <p>Join discussions and share insights</p>
+                    </div>
+                    <div class="help-card">
+                        <i class="fas fa-headset"></i>
+                        <h4>Support</h4>
+                        <p>Contact our support team</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading DataPulse...</p>
+        </div>
+    </div>
+
+    <!-- Quick Actions Modal -->
+    <div class="modal" id="quickActionsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Quick Actions</h3>
+                <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="quick-actions-grid">
+                <button class="quick-action-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>New Dashboard</span>
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Create Report</span>
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-bell"></i>
+                    <span>Add Alert</span>
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Invite Team</span>
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-download"></i>
+                    <span>Export Data</span>
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
